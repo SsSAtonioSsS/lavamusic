@@ -39,7 +39,7 @@ function getButtons(
 		},
 		{
 			customId: "LOW_VOL_BUT",
-			emoji: client.emoji.voldown,
+			emoji: client.emoji.volume.down,
 			style: ButtonStyle.Secondary,
 		},
 		{
@@ -59,7 +59,7 @@ function getButtons(
 		},
 		{
 			customId: "HIGH_VOL_BUT",
-			emoji: client.emoji.volup,
+			emoji: client.emoji.volume.up,
 			style: ButtonStyle.Secondary,
 		},
 	];

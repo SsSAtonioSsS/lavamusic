@@ -15,8 +15,10 @@ export default {
 		previous: "⏮️",
 		forward: "⏩",
 		rewind: "⏪",
-		voldown: "🔉",
-		volup: "🔊",
+		volume: {
+			down: "🔉",
+			up: "🔊",
+		},
 		shuffle: "🔀",
 		loop: {
 			none: "🔁",
