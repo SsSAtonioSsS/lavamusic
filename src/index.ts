@@ -1,4 +1,4 @@
-import { shardStart } from "./shard";
+import { start } from "./shard";
 import Logger from "./structures/Logger";
 import { LAVAMUSIC_BANNER } from "./utils/LavaLogo";
 import { ThemeSelector } from "./utils/ThemeSelector";
@@ -21,7 +21,7 @@ try {
 	// Set a custom title for the console window
 	setConsoleTitle("Lavamusic");
 	console.log(theme.purpleNeon(LAVAMUSIC_BANNER));
-	shardStart(logger);
+	start(logger);
 } catch (err) {
 	logger.error("[CLIENT] An error has occurred:", err);
 }
