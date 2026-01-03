@@ -1,3 +1,4 @@
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 import type { Requester } from "../../types";
 
@@ -6,7 +7,7 @@ export default class Grab extends Command {
 		super(client, {
 			name: "grab",
 			description: {
-				content: "cmd.grab.description",
+				content: I18N.commands.grab.description,
 				examples: ["grab"],
 				usage: "grab",
 			},
@@ -23,12 +24,7 @@ export default class Grab extends Command {
 			},
 			permissions: {
 				dev: false,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: true,
@@ -39,7 +35,7 @@ export default class Grab extends Command {
 	public async run(client: Lavamusic, ctx: Context): Promise<any> {
 		const player = client.manager.getPlayer(ctx.guild.id);
 
-		await ctx.sendDeferMessage(ctx.locale("cmd.grab.loading"));
+		await ctx.sendDeferMessage(ctx.locale(I18N.commands.grab.loading));
 
 		if (!player?.queue.current) {
 			return await ctx.sendMessage({
@@ -47,20 +43,18 @@ export default class Grab extends Command {
 					this.client
 						.embed()
 						.setColor(this.client.color.red)
-						.setDescription(ctx.locale("player.errors.no_song")),
+						.setDescription(ctx.locale(I18N.player.errors.no_song)),
 				],
 			});
 		}
 
 		const song = player.queue.current;
 
-		const songInfo = ctx.locale("cmd.grab.content", {
+		const songInfo = ctx.locale(I18N.commands.grab.content, {
 			title: song.info.title,
 			uri: song.info.uri,
 			artworkUrl: song.info.artworkUrl,
-			length: song.info.isStream
-				? "LIVE"
-				: client.utils.formatTime(song.info.duration),
+			length: song.info.isStream ? "LIVE" : client.utils.formatTime(song.info.duration),
 			requester: (song.requester as Requester).id,
 		});
 
@@ -81,7 +75,7 @@ export default class Grab extends Command {
 				embeds: [
 					this.client
 						.embed()
-						.setDescription(ctx.locale("cmd.grab.check_dm"))
+						.setDescription(ctx.locale(I18N.commands.grab.check_dm))
 						.setColor(this.client.color.green),
 				],
 			});
@@ -90,7 +84,7 @@ export default class Grab extends Command {
 				embeds: [
 					this.client
 						.embed()
-						.setDescription(ctx.locale("cmd.grab.dm_failed"))
+						.setDescription(ctx.locale(I18N.commands.grab.dm_failed))
 						.setColor(this.client.color.red),
 				],
 			});

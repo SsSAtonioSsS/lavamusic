@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/style/useTemplate: explanation */
+
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 import logger from "../../structures/Logger";
 
@@ -7,7 +9,7 @@ export default class MoveNode extends Command {
 		super(client, {
 			name: "movenode",
 			description: {
-				content: "cmd.movenode.description",
+				content: I18N.commands.movenode.description,
 				examples: ["movenode", "movenode node2"],
 				usage: "movenode [nodeId]",
 			},
@@ -24,19 +26,14 @@ export default class MoveNode extends Command {
 			},
 			permissions: {
 				dev: true,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: true,
 			options: [
 				{
 					name: "node",
-					description: "cmd.movenode.options.node",
+					description: I18N.commands.movenode.options.node,
 					type: 3,
 					required: false,
 				},
@@ -44,11 +41,7 @@ export default class MoveNode extends Command {
 		});
 	}
 
-	public async run(
-		client: Lavamusic,
-		ctx: Context,
-		args: string[],
-	): Promise<any> {
+	public async run(client: Lavamusic, ctx: Context, args: string[]): Promise<any> {
 		// If no node specified, show available nodes as before
 		let nodeId: string | undefined;
 		if (args.length > 0) {
@@ -64,16 +57,14 @@ export default class MoveNode extends Command {
 			return await ctx.sendMessage({
 				embeds: [
 					{
-						description: ctx.locale("cmd.movenode.no_players"),
+						description: ctx.locale(I18N.commands.movenode.messages.no_players),
 						color: this.client.color.red,
 					},
 				],
 			});
 		}
 		const currentNodeId =
-			allPlayers.size > 0
-				? allPlayers.values().next().value?.node.options.id
-				: null;
+			allPlayers.size > 0 ? allPlayers.values().next().value?.node.options.id : null;
 
 		if (!nodeId) {
 			const availableNodes = client.manager.nodeManager.nodes
@@ -84,7 +75,7 @@ export default class MoveNode extends Command {
 				return await ctx.sendMessage({
 					embeds: [
 						{
-							description: ctx.locale("cmd.movenode.no_available_nodes"),
+							description: ctx.locale(I18N.commands.movenode.messages.no_available_nodes),
 							color: this.client.color.red,
 						},
 					],
@@ -92,21 +83,19 @@ export default class MoveNode extends Command {
 			}
 
 			const currentNodeText = currentNodeId
-				? `**${ctx.locale("cmd.movenode.current_node")}:** ${currentNodeId}`
+				? `**${ctx.locale(I18N.commands.movenode.messages.current_node)}:** ${currentNodeId}`
 				: "";
-			const availableNodesList = availableNodes
-				.map((id) => `• ${id}`)
-				.join("\n");
-			const availableNodesText = `**${ctx.locale("cmd.movenode.available_nodes")}:**\n${availableNodesList}`;
+			const availableNodesList = availableNodes.map((id) => `• ${id}`).join("\n");
+			const availableNodesText = `**${ctx.locale(I18N.commands.movenode.messages.available_nodes)}:**\n${availableNodesList}`;
 
 			return await ctx.sendMessage({
 				embeds: [
 					{
-						title: ctx.locale("cmd.movenode.available_nodes_title"),
+						title: ctx.locale(I18N.commands.movenode.messages.available_nodes_title),
 						description: `${currentNodeText}\n\n${availableNodesText}`,
 						color: this.client.color.main,
 						footer: {
-							text: ctx.locale("cmd.movenode.usage_hint"),
+							text: ctx.locale(I18N.commands.movenode.messages.usage_hint),
 						},
 					},
 				],
@@ -119,7 +108,7 @@ export default class MoveNode extends Command {
 			return await ctx.sendMessage({
 				embeds: [
 					{
-						description: ctx.locale("cmd.movenode.node_not_found", {
+						description: ctx.locale(I18N.commands.movenode.messages.node_not_found, {
 							node: nodeId,
 						}),
 						color: this.client.color.red,
@@ -132,7 +121,7 @@ export default class MoveNode extends Command {
 			return await ctx.sendMessage({
 				embeds: [
 					{
-						description: ctx.locale("cmd.movenode.node_not_connected", {
+						description: ctx.locale(I18N.commands.movenode.messages.node_not_connected, {
 							node: nodeId,
 						}),
 						color: this.client.color.red,
@@ -149,7 +138,7 @@ export default class MoveNode extends Command {
 			return await ctx.sendMessage({
 				embeds: [
 					{
-						description: ctx.locale("cmd.movenode.same_node", { node: nodeId }),
+						description: ctx.locale(I18N.commands.movenode.messages.same_node, { node: nodeId }),
 						color: this.client.color.red,
 					},
 				],
@@ -157,15 +146,11 @@ export default class MoveNode extends Command {
 		}
 
 		try {
-			if (
-				ctx.interaction &&
-				!ctx.interaction.replied &&
-				!ctx.interaction.deferred
-			) {
+			if (ctx.interaction && !ctx.interaction.replied && !ctx.interaction.deferred) {
 				await ctx.sendMessage({
 					embeds: [
 						{
-							description: ctx.locale("cmd.movenode.moving_all_players", {
+							description: ctx.locale(I18N.commands.movenode.messages.moving_all_players, {
 								node: nodeId,
 							}),
 							color: this.client.color.main,
@@ -208,10 +193,10 @@ export default class MoveNode extends Command {
 			let description = "";
 			if (successMoves.length > 0) {
 				description +=
-					ctx.locale("cmd.movenode.moved_players", {
+					ctx.locale(I18N.commands.movenode.messages.moved_players, {
 						list: successMoves
 							.map((r) =>
-								ctx.locale("cmd.movenode.guild_move", {
+								ctx.locale(I18N.commands.movenode.messages.guild_move, {
 									guildId: r.guildId,
 									from: r.from,
 									to: r.to,
@@ -223,10 +208,10 @@ export default class MoveNode extends Command {
 			if (failedMoves.length > 0) {
 				description +=
 					"\n" +
-					ctx.locale("cmd.movenode.failed_moves", {
+					ctx.locale(I18N.commands.movenode.messages.failed_moves, {
 						list: failedMoves
 							.map((r) =>
-								ctx.locale("cmd.movenode.guild_move_failed", {
+								ctx.locale(I18N.commands.movenode.messages.guild_move_failed, {
 									guildId: r.guildId,
 									error: r.error,
 								}),
@@ -235,21 +220,15 @@ export default class MoveNode extends Command {
 					});
 			}
 			if (description === "") {
-				description = ctx.locale("cmd.movenode.no_players_moved");
+				description = ctx.locale(I18N.commands.movenode.messages.no_players_moved);
 			}
 
 			// Send a summary message
-			const resultTitle = ctx.locale("cmd.movenode.results_title");
-			const resultColor =
-				failedMoves.length > 0
-					? this.client.color.red
-					: this.client.color.green;
+			const resultTitle = ctx.locale(I18N.commands.movenode.messages.results_title);
+			const resultColor = failedMoves.length > 0 ? this.client.color.red : this.client.color.green;
 			const resultTimestamp = new Date().toISOString();
 
-			if (
-				ctx.interaction &&
-				(ctx.interaction.replied || ctx.interaction.deferred)
-			) {
+			if (ctx.interaction && (ctx.interaction.replied || ctx.interaction.deferred)) {
 				await ctx.editMessage({
 					embeds: [
 						{
@@ -276,18 +255,15 @@ export default class MoveNode extends Command {
 		} catch (error) {
 			logger.error("Failed to move player nodes:", error);
 			// Error handling
-			if (
-				ctx.interaction &&
-				(ctx.interaction.replied || ctx.interaction.deferred)
-			) {
+			if (ctx.interaction && (ctx.interaction.replied || ctx.interaction.deferred)) {
 				await ctx.editMessage({
 					embeds: [
 						{
-							description: ctx.locale("cmd.movenode.error", {
+							description: ctx.locale(I18N.commands.movenode.messages.error, {
 								error:
 									error instanceof Error
 										? error.message
-										: ctx.locale("cmd.movenode.unknown_error"),
+										: ctx.locale(I18N.commands.movenode.messages.unknown_error),
 							}),
 							color: this.client.color.red,
 						},
@@ -297,11 +273,11 @@ export default class MoveNode extends Command {
 				await ctx.sendMessage({
 					embeds: [
 						{
-							description: ctx.locale("cmd.movenode.error", {
+							description: ctx.locale(I18N.commands.movenode.messages.error, {
 								error:
 									error instanceof Error
 										? error.message
-										: ctx.locale("cmd.movenode.unknown_error"),
+										: ctx.locale(I18N.commands.movenode.messages.unknown_error),
 							}),
 							color: this.client.color.red,
 						},

@@ -1,6 +1,7 @@
 import type { Lavamusic } from "../../structures/index";
 import logger from "../../structures/Logger";
 import type { BotPlugin } from "../../types/botPlugin";
+
 const antiCrash: BotPlugin = {
 	name: "AntiCrash Plugin",
 	version: "1.0.0",

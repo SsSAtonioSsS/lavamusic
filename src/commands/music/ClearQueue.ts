@@ -1,3 +1,4 @@
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class ClearQueue extends Command {
@@ -5,7 +6,7 @@ export default class ClearQueue extends Command {
 		super(client, {
 			name: "clearqueue",
 			description: {
-				content: "cmd.clearqueue.description",
+				content: I18N.commands.clearqueue.description,
 				examples: ["clearqueue"],
 				usage: "clearqueue",
 			},
@@ -22,12 +23,7 @@ export default class ClearQueue extends Command {
 			},
 			permissions: {
 				dev: false,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: true,
@@ -44,7 +40,7 @@ export default class ClearQueue extends Command {
 				embeds: [
 					embed
 						.setColor(this.client.color.red)
-						.setDescription(ctx.locale("player.errors.no_player")),
+						.setDescription(ctx.locale(I18N.player.errors.no_player)),
 				],
 			});
 		}
@@ -54,7 +50,7 @@ export default class ClearQueue extends Command {
 				embeds: [
 					embed
 						.setColor(this.client.color.red)
-						.setDescription(ctx.locale("player.errors.no_song")),
+						.setDescription(ctx.locale(I18N.player.errors.no_song)),
 				],
 			});
 		}
@@ -64,7 +60,7 @@ export default class ClearQueue extends Command {
 			embeds: [
 				embed
 					.setColor(this.client.color.main)
-					.setDescription(ctx.locale("cmd.clearqueue.messages.cleared")),
+					.setDescription(ctx.locale(I18N.commands.clearqueue.messages.cleared)),
 			],
 		});
 	}

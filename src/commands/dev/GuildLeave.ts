@@ -1,4 +1,6 @@
 import { ChannelType, type TextChannel } from "discord.js";
+import { env } from "../../env";
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class GuildLeave extends Command {
@@ -6,7 +8,7 @@ export default class GuildLeave extends Command {
 		super(client, {
 			name: "guildleave",
 			description: {
-				content: "Leave a guild",
+				content: I18N.dev.guilds.description,
 				examples: ["guildleave <guildId>"],
 				usage: "guildleave <guildId>",
 			},
@@ -22,12 +24,7 @@ export default class GuildLeave extends Command {
 			},
 			permissions: {
 				dev: true,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: false,
@@ -35,11 +32,7 @@ export default class GuildLeave extends Command {
 		});
 	}
 
-	public async run(
-		client: Lavamusic,
-		ctx: Context,
-		args: string[],
-	): Promise<any> {
+	public async run(client: Lavamusic, ctx: Context, args: string[]): Promise<any> {
 		const guildId = args[0];
 
 		const guild = await client.shard
@@ -53,7 +46,7 @@ export default class GuildLeave extends Command {
 			.then((results) => results.find((g) => g !== null));
 
 		if (!guild) {
-			return await ctx.sendMessage("Guild not found.");
+			return await ctx.sendMessage(ctx.locale(I18N.dev.guilds.not_found));
 		}
 
 		try {
@@ -66,17 +59,17 @@ export default class GuildLeave extends Command {
 				},
 				{ context: { guildId } },
 			);
-			await ctx.sendMessage(`Left guild ${guild.name}`);
+			await ctx.sendMessage(ctx.locale(I18N.dev.guilds.leave.success, { name: guild.name }));
 		} catch {
-			await ctx.sendMessage(`Failed to leave guild ${guild.name}`);
+			await ctx.sendMessage(ctx.locale(I18N.dev.guilds.leave.fail, { name: guild.name }));
 		}
 
-		const logChannelId = process.env.LOG_CHANNEL_ID;
+		const logChannelId = env.LOG_CHANNEL_ID;
 		if (logChannelId) {
 			const logChannel = client.channels.cache.get(logChannelId) as TextChannel;
 			if (logChannel && logChannel.type === ChannelType.GuildText) {
 				await logChannel.send(
-					`Bot has left guild: ${guild.name} (ID: ${guild.id})`,
+					ctx.locale(I18N.dev.guilds.leave.fail, { name: guild.name, id: guild.id }),
 				);
 			}
 		}

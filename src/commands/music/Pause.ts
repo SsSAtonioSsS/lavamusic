@@ -1,3 +1,4 @@
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class Pause extends Command {
@@ -5,7 +6,7 @@ export default class Pause extends Command {
 		super(client, {
 			name: "pause",
 			description: {
-				content: "cmd.pause.description",
+				content: I18N.commands.pause.description,
 				examples: ["pause"],
 				usage: "pause",
 			},
@@ -22,12 +23,7 @@ export default class Pause extends Command {
 			},
 			permissions: {
 				dev: false,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: true,
@@ -44,7 +40,7 @@ export default class Pause extends Command {
 				embeds: [
 					embed
 						.setColor(this.client.color.red)
-						.setDescription(ctx.locale("player.errors.already_paused")),
+						.setDescription(ctx.locale(I18N.player.errors.already_paused)),
 				],
 			});
 		}
@@ -55,7 +51,7 @@ export default class Pause extends Command {
 			embeds: [
 				embed
 					.setColor(this.client.color.main)
-					.setDescription(ctx.locale("cmd.pause.successfully_paused")),
+					.setDescription(ctx.locale(I18N.commands.pause.successfully_paused)),
 			],
 		});
 	}

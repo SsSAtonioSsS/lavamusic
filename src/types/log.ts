@@ -9,7 +9,7 @@ const LEVEL_KEYS = [
 	"LOG",
 	"PAUSE",
 	"START",
-	"STAR"
+	"STAR",
 ] as const;
 
 /**
@@ -17,9 +17,7 @@ const LEVEL_KEYS = [
  */
 export type LogLevel = (typeof LEVEL_KEYS)[number];
 
-export const LOG_LEVEL = Object.fromEntries(
-	LEVEL_KEYS.map((key) => [key, key]),
-) as {
+export const LOG_LEVEL = Object.fromEntries(LEVEL_KEYS.map((key) => [key, key])) as {
 	[K in LogLevel]: K;
 };
 
@@ -50,7 +48,7 @@ const EMOJI_BADGES: Record<LogLevel, string> = {
 	LOG: "📝",
 	PAUSE: "⏸️",
 	START: "▶️",
-	STAR: "⭐"
+	STAR: "⭐",
 };
 
 /**
@@ -59,8 +57,8 @@ const EMOJI_BADGES: Record<LogLevel, string> = {
  * - {@linkcode LogBadgeStyle.default}: Uses Signale's default badges.
  */
 export const LogBadgeStyle = {
-  emoji: "emoji",
-  default: "default",
+	emoji: "emoji",
+	default: "default",
 } as const;
 
 export type LogBadgeStyle = (typeof LogBadgeStyle)[keyof typeof LogBadgeStyle];
@@ -73,7 +71,7 @@ export type LogBadgeStyle = (typeof LogBadgeStyle)[keyof typeof LogBadgeStyle];
  * @param level - The log level.
  * @param style - The visual style.
  */
-export function getLogBadge(level: LogLevel,style?: LogBadgeStyle): string|undefined {
+export function getLogBadge(level: LogLevel, style?: LogBadgeStyle): string | undefined {
 	if (style?.match(LogBadgeStyle.emoji)) return EMOJI_BADGES[level];
 	return;
 }
@@ -90,5 +88,5 @@ export const CONSOLE_LOG_COLORS: Record<LogLevel, string> = {
 	LOG: "grey",
 	PAUSE: "yellow",
 	START: "green",
-	STAR: "yellow"
+	STAR: "yellow",
 };

@@ -6,15 +6,15 @@ import {
 	type ChannelSelectMenuInteraction,
 	GuildMember,
 	type MentionableSelectMenuInteraction,
-	PermissionFlagsBits,
 	MessageFlags,
+	PermissionFlagsBits,
 	type RoleSelectMenuInteraction,
 	type StringSelectMenuInteraction,
 	type TextChannel,
 	type UserSelectMenuInteraction,
 } from "discord.js";
 import type { Player, Track, TrackStartEvent } from "lavalink-client";
-import { T } from "../../structures/I18n";
+import { I18N, t } from "../../structures/I18n";
 import { Event, type Lavamusic } from "../../structures/index";
 import type { Requester } from "../../types";
 import { trackStart } from "../../utils/SetupSystem";
@@ -26,18 +26,12 @@ export default class TrackStart extends Event {
 		});
 	}
 
-	public async run(
-		player: Player,
-		track: Track | null,
-		_payload: TrackStartEvent,
-	): Promise<void> {
+	public async run(player: Player, track: Track | null, _payload: TrackStartEvent): Promise<void> {
 		const guild = this.client.guilds.cache.get(player.guildId);
 		if (!guild) return;
 		if (!player.textChannelId) return;
 		if (!track) return;
-		const channel = guild.channels.cache.get(
-			player.textChannelId,
-		) as TextChannel;
+		const channel = guild.channels.cache.get(player.textChannelId) as TextChannel;
 		if (!channel) return;
 
 		this.client.utils.updateStatus(this.client, guild.id);
@@ -55,7 +49,7 @@ export default class TrackStart extends Event {
 		const embed = this.client
 			.embed()
 			.setAuthor({
-				name: T(locale, "player.trackStart.now_playing"),
+				name: t(I18N.player.trackStart.now_playing, { lng: locale }),
 				iconURL:
 					this.client.config.icons[track.info.sourceName] ??
 					this.client.user?.displayAvatarURL({ extension: "png" }),
@@ -63,7 +57,8 @@ export default class TrackStart extends Event {
 			.setColor(this.client.color.main)
 			.setDescription(`**[${track.info.title}](${track.info.uri})**`)
 			.setFooter({
-				text: T(locale, "player.trackStart.requested_by", {
+				text: t(I18N.player.trackStart.requested_by, {
+					lng: locale,
 					user: (track.requester as Requester).username,
 				}),
 				iconURL: (track.requester as Requester).avatarURL,
@@ -71,14 +66,12 @@ export default class TrackStart extends Event {
 			.setThumbnail(track.info.artworkUrl)
 			.addFields(
 				{
-					name: T(locale, "player.trackStart.duration"),
-					value: track.info.isStream
-						? "LIVE"
-						: this.client.utils.formatTime(track.info.duration),
+					name: t(I18N.player.trackStart.duration, { lng: locale }),
+					value: track.info.isStream ? "LIVE" : this.client.utils.formatTime(track.info.duration),
 					inline: true,
 				},
 				{
-					name: T(locale, "player.trackStart.author"),
+					name: t(I18N.player.trackStart.author, { lng: locale }),
 					value: track.info.author,
 					inline: true,
 				},
@@ -90,14 +83,7 @@ export default class TrackStart extends Event {
 		if (setup?.textId) {
 			const textChannel = guild.channels.cache.get(setup.textId) as TextChannel;
 			if (textChannel) {
-				await trackStart(
-					setup.messageId,
-					textChannel,
-					player,
-					track,
-					this.client,
-					locale,
-				);
+				await trackStart(setup.messageId, textChannel, player, track, this.client, locale);
 			}
 		} else {
 			const message = await channel.send({
@@ -111,10 +97,7 @@ export default class TrackStart extends Event {
 	}
 }
 
-function createButtonRow(
-	player: Player,
-	client: Lavamusic,
-): ActionRowBuilder<ButtonBuilder> {
+function createButtonRow(player: Player, client: Lavamusic): ActionRowBuilder<ButtonBuilder> {
 	const previousButton = new ButtonBuilder()
 
 		.setCustomId("previous")
@@ -139,14 +122,8 @@ function createButtonRow(
 
 	const loopButton = new ButtonBuilder()
 		.setCustomId("loop")
-		.setEmoji(
-			player.repeatMode === "track"
-				? client.emoji.loop.track
-				: client.emoji.loop.none,
-		)
-		.setStyle(
-			player.repeatMode !== "off" ? ButtonStyle.Success : ButtonStyle.Secondary,
-		);
+		.setEmoji(player.repeatMode === "track" ? client.emoji.loop.track : client.emoji.loop.none)
+		.setStyle(player.repeatMode !== "off" ? ButtonStyle.Success : ButtonStyle.Secondary);
 
 	return new ActionRowBuilder<ButtonBuilder>().addComponents(
 		resumeButton,
@@ -173,7 +150,8 @@ function createCollector(
 				if (isSameVoiceChannel) return true;
 			}
 			await b.reply({
-				content: T(locale, "player.trackStart.not_connected_to_voice_channel", {
+				content: t(I18N.player.trackStart.not_connected_to_voice_channel, {
+					lng: locale,
 					channel: b.guild?.members.me?.voice.channelId ?? "None",
 				}),
 				flags: MessageFlags.Ephemeral,
@@ -185,7 +163,7 @@ function createCollector(
 	collector.on("collect", async (interaction: ButtonInteraction<"cached">) => {
 		if (!(await checkDj(client, interaction))) {
 			await interaction.reply({
-				content: T(locale, "player.trackStart.need_dj_role"),
+				content: t(I18N.player.trackStart.need_dj_role, { lng: locale }),
 				flags: MessageFlags.Ephemeral,
 			});
 			return;
@@ -213,13 +191,11 @@ function createCollector(
 						track: previousTrack,
 					});
 					await editMessage(
-						T(locale, "player.trackStart.previous_by", {
-							user: interaction.user.tag,
-						}),
+						t(I18N.player.trackStart.previous_by, { lng: locale, user: interaction.user.tag }),
 					);
 				} else {
 					await interaction.reply({
-						content: T(locale, "player.trackStart.no_previous_song"),
+						content: t(I18N.player.trackStart.no_previous_song, { lng: locale }),
 						flags: MessageFlags.Ephemeral,
 					});
 				}
@@ -229,17 +205,13 @@ function createCollector(
 					player.resume();
 					await interaction.deferUpdate();
 					await editMessage(
-						T(locale, "player.trackStart.resumed_by", {
-							user: interaction.user.tag,
-						}),
+						t(I18N.player.trackStart.resumed_by, { lng: locale, user: interaction.user.tag }),
 					);
 				} else {
 					player.pause();
 					await interaction.deferUpdate();
 					await editMessage(
-						T(locale, "player.trackStart.paused_by", {
-							user: interaction.user.tag,
-						}),
+						t(I18N.player.trackStart.paused_by, { lng: locale, user: interaction.user.tag }),
 					);
 				}
 				break;
@@ -253,13 +225,11 @@ function createCollector(
 					await interaction.deferUpdate();
 					player.skip();
 					await editMessage(
-						T(locale, "player.trackStart.skipped_by", {
-							user: interaction.user.tag,
-						}),
+						t(I18N.player.trackStart.skipped_by, { lng: locale, user: interaction.user.tag }),
 					);
 				} else {
 					await interaction.reply({
-						content: T(locale, "player.trackStart.no_more_songs_in_queue"),
+						content: t(I18N.player.trackStart.no_more_songs_in_queue, { lng: locale }),
 						flags: MessageFlags.Ephemeral,
 					});
 				}
@@ -270,16 +240,15 @@ function createCollector(
 					case "off": {
 						player.setRepeatMode("track");
 						await editMessage(
-							T(locale, "player.trackStart.looping_by", {
-								user: interaction.user.tag,
-							}),
+							t(I18N.player.trackStart.looping_by, { lng: locale, user: interaction.user.tag }),
 						);
 						break;
 					}
 					case "track": {
 						player.setRepeatMode("queue");
 						await editMessage(
-							T(locale, "player.trackStart.looping_queue_by", {
+							t(I18N.player.trackStart.looping_queue_by, {
+								lng: locale,
 								user: interaction.user.tag,
 							}),
 						);
@@ -288,9 +257,7 @@ function createCollector(
 					case "queue": {
 						player.setRepeatMode("off");
 						await editMessage(
-							T(locale, "player.trackStart.looping_off_by", {
-								user: interaction.user.tag,
-							}),
+							t(I18N.player.trackStart.looping_off_by, { lng: locale, user: interaction.user.tag }),
 						);
 						break;
 					}
@@ -318,12 +285,7 @@ export async function checkDj(
 		const hasDjRole = interaction.member.roles.cache.some((role) =>
 			djRole.map((r) => r.roleId).includes(role.id),
 		);
-		if (
-			!(
-				hasDjRole ||
-				interaction.member.permissions.has(PermissionFlagsBits.ManageGuild)
-			)
-		) {
+		if (!(hasDjRole || interaction.member.permissions.has(PermissionFlagsBits.ManageGuild))) {
 			return false;
 		}
 	}

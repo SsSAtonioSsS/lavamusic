@@ -1,4 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class Invite extends Command {
@@ -6,7 +7,7 @@ export default class Invite extends Command {
 		super(client, {
 			name: "invite",
 			description: {
-				content: "cmd.invite.description",
+				content: I18N.commands.invite.description,
 				examples: ["invite"],
 				usage: "invite",
 			},
@@ -23,12 +24,7 @@ export default class Invite extends Command {
 			},
 			permissions: {
 				dev: false,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: true,
@@ -40,13 +36,13 @@ export default class Invite extends Command {
 		const embed = this.client.embed();
 		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
-				.setLabel(ctx.locale("buttons.invite"))
+				.setLabel(ctx.locale(I18N.buttons.invite))
 				.setStyle(ButtonStyle.Link)
 				.setURL(
 					`https://discord.com/api/oauth2/authorize?client_id=${client.env.CLIENT_ID}&permissions=8&scope=bot%20applications.commands`,
 				),
 			new ButtonBuilder()
-				.setLabel(ctx.locale("buttons.support"))
+				.setLabel(ctx.locale(I18N.buttons.support))
 				.setStyle(ButtonStyle.Link)
 				.setURL("https://discord.gg/YQsGbTwPBx"),
 		);
@@ -54,7 +50,7 @@ export default class Invite extends Command {
 			embeds: [
 				embed
 					.setColor(this.client.color.main)
-					.setDescription(ctx.locale("cmd.invite.content")),
+					.setDescription(ctx.locale(I18N.commands.invite.content)),
 			],
 			components: [row],
 		});

@@ -1,3 +1,4 @@
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class GuildList extends Command {
@@ -5,7 +6,7 @@ export default class GuildList extends Command {
 		super(client, {
 			name: "guildlist",
 			description: {
-				content: "List all guilds the bot is in",
+				content: I18N.dev.guilds.list,
 				examples: ["guildlist"],
 				usage: "guildlist",
 			},
@@ -21,12 +22,7 @@ export default class GuildList extends Command {
 			},
 			permissions: {
 				dev: true,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: false,
@@ -38,9 +34,9 @@ export default class GuildList extends Command {
 		let allGuilds: { name: string; id: string }[] = [];
 		if (client.shard) {
 			try {
-				const results = await client.shard.broadcastEval<
-					{ name: string; id: string }[]
-				>((c) => c.guilds.cache.map((g) => ({ name: g.name, id: g.id })));
+				const results = await client.shard.broadcastEval<{ name: string; id: string }[]>((c) =>
+					c.guilds.cache.map((g) => ({ name: g.name, id: g.id })),
+				);
 				allGuilds = results.flat();
 			} catch {
 				// Fallback to local cache if cross-shard request fails

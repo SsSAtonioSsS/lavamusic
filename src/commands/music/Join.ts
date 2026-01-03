@@ -1,4 +1,5 @@
 import type { VoiceChannel } from "discord.js";
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class Join extends Command {
@@ -6,7 +7,7 @@ export default class Join extends Command {
 		super(client, {
 			name: "join",
 			description: {
-				content: "cmd.join.description",
+				content: I18N.commands.join.description,
 				examples: ["join"],
 				usage: "join",
 			},
@@ -46,7 +47,7 @@ export default class Join extends Command {
 			return await ctx.sendMessage({
 				embeds: [
 					embed.setColor(this.client.color.main).setDescription(
-						ctx.locale("cmd.join.already_connected", {
+						ctx.locale(I18N.commands.join.already_connected, {
 							channelId: player.voiceChannelId,
 						}),
 					),
@@ -54,14 +55,13 @@ export default class Join extends Command {
 			});
 		}
 
-		const memberVoiceChannel = (ctx.member as any).voice
-			.channel as VoiceChannel;
+		const memberVoiceChannel = (ctx.member as any).voice.channel as VoiceChannel;
 		if (!memberVoiceChannel) {
 			return await ctx.sendMessage({
 				embeds: [
 					embed
 						.setColor(this.client.color.red)
-						.setDescription(ctx.locale("cmd.join.no_voice_channel")),
+						.setDescription(ctx.locale(I18N.commands.join.no_voice_channel)),
 				],
 			});
 		}
@@ -78,7 +78,7 @@ export default class Join extends Command {
 		return await ctx.sendMessage({
 			embeds: [
 				embed.setColor(this.client.color.main).setDescription(
-					ctx.locale("cmd.join.joined", {
+					ctx.locale(I18N.commands.join.joined, {
 						channelId: player.voiceChannelId,
 					}),
 				),

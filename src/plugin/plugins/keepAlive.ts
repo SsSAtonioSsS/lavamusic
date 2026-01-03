@@ -3,6 +3,7 @@ import { env } from "../../env";
 import type { Lavamusic } from "../../structures/index";
 import logger from "../../structures/Logger";
 import type { BotPlugin } from "../../types/botPlugin";
+
 const keepAlive: BotPlugin = {
 	name: "KeepAlive Plugin",
 	version: "1.0.0",

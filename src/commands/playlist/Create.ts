@@ -1,4 +1,4 @@
-
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class CreatePlaylist extends Command {
@@ -6,7 +6,7 @@ export default class CreatePlaylist extends Command {
 		super(client, {
 			name: "create",
 			description: {
-				content: "cmd.create.description",
+				content: I18N.commands.create.description,
 				examples: ["create <name>"],
 				usage: "create <name>",
 			},
@@ -23,19 +23,14 @@ export default class CreatePlaylist extends Command {
 			},
 			permissions: {
 				dev: false,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: true,
 			options: [
 				{
 					name: "name",
-					description: "cmd.create.options.name",
+					description: I18N.commands.create.options.name,
 					type: 3,
 					required: true,
 				},
@@ -43,11 +38,7 @@ export default class CreatePlaylist extends Command {
 		});
 	}
 
-	public async run(
-		client: Lavamusic,
-		ctx: Context,
-		args: string[],
-	): Promise<any> {
+	public async run(client: Lavamusic, ctx: Context, args: string[]): Promise<any> {
 		const name = args.join(" ").trim();
 		const embed = this.client.embed();
 		const normalizedName = name.toLowerCase();
@@ -56,7 +47,7 @@ export default class CreatePlaylist extends Command {
 			return await ctx.sendMessage({
 				embeds: [
 					embed
-						.setDescription(ctx.locale("cmd.create.messages.name_empty"))
+						.setDescription(ctx.locale(I18N.commands.create.messages.name_empty))
 						.setColor(this.client.color.red),
 				],
 			});
@@ -66,36 +57,33 @@ export default class CreatePlaylist extends Command {
 			return await ctx.sendMessage({
 				embeds: [
 					embed
-						.setDescription(ctx.locale("cmd.create.messages.name_too_long"))
+						.setDescription(ctx.locale(I18N.commands.create.messages.name_too_long))
 						.setColor(this.client.color.red),
 				],
 			});
 		}
 
-		const playlistExists = await client.db.getPlaylist(
-			ctx.author?.id!,
-			normalizedName,
-		);
+		const playlistExists = await client.db.getPlaylist(ctx.author?.id ?? "", normalizedName);
 		if (playlistExists) {
 			return await ctx.sendMessage({
 				embeds: [
 					embed
-						.setDescription(ctx.locale("cmd.create.messages.playlist_exists"))
+						.setDescription(ctx.locale(I18N.commands.create.messages.playlist_exists))
 						.setColor(this.client.color.red),
 				],
 			});
 		}
 
 		try {
-			await client.db.createPlaylist(ctx.author?.id!, normalizedName);
+			await client.db.createPlaylist(ctx.author?.id ?? "", normalizedName);
 		} catch (error) {
-			console.error(error)
+			console.error(error);
 		}
 		return await ctx.sendMessage({
 			embeds: [
 				embed
 					.setDescription(
-						ctx.locale("cmd.create.messages.playlist_created", {
+						ctx.locale(I18N.commands.create.messages.playlist_created, {
 							name,
 						}),
 					)

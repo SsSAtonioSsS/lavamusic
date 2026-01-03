@@ -1,9 +1,4 @@
-import {
-	ChannelType,
-	PermissionFlagsBits,
-	type GuildMember,
-	type VoiceState,
-} from "discord.js";
+import { ChannelType, type GuildMember, PermissionFlagsBits, type VoiceState } from "discord.js";
 import { Event, type Lavamusic } from "../../structures/index";
 import logger from "../../structures/Logger";
 export default class VoiceStateUpdate extends Event {
@@ -13,8 +8,7 @@ export default class VoiceStateUpdate extends Event {
 		});
 	}
 
-	private delay = (ms: number) =>
-		new Promise<void>((res) => setTimeout(res, ms));
+	private delay = (ms: number) => new Promise<void>((res) => setTimeout(res, ms));
 
 	public async run(oldState: VoiceState, newState: VoiceState): Promise<void> {
 		const guildId = newState.guild.id;
@@ -27,19 +21,13 @@ export default class VoiceStateUpdate extends Event {
 
 		const is247 = await this.client.db.get_247(guildId);
 
-		const botMember = await newState.guild.members
-			.fetch(this.client.user!.id)
-			.catch(() => null);
+		const botMember = await newState.guild.members.fetch(this.client.user!.id).catch(() => null);
 		const botVoiceChannelId =
 			newState.guild.voiceStates.cache.get(this.client.user!.id)?.channelId ??
 			newState.guild.members.me?.voice?.channelId ??
 			botMember?.voice?.channelId;
 
-		if (
-			newState.id === this.client.user!.id &&
-			oldState.channelId &&
-			!newState.channelId
-		) {
+		if (newState.id === this.client.user!.id && oldState.channelId && !newState.channelId) {
 			if (!is247) {
 				try {
 					await player.destroy();
@@ -111,13 +99,9 @@ export default class VoiceStateUpdate extends Event {
 		}
 
 		if (newState.serverDeaf !== oldState.serverDeaf && !newState.serverDeaf) {
-			const vc = await newState.guild.channels
-				.fetch(player.voiceChannelId!)
-				.catch(() => null);
+			const vc = await newState.guild.channels.fetch(player.voiceChannelId!).catch(() => null);
 			if (vc && "members" in vc) {
-				const botMember = await newState.guild.members
-					.fetch(client.user!.id)
-					.catch(() => null);
+				const botMember = await newState.guild.members.fetch(client.user!.id).catch(() => null);
 				if (botMember) {
 					const permissions = vc.permissionsFor(botMember);
 					if (permissions?.has(PermissionFlagsBits.DeafenMembers)) {
@@ -132,24 +116,15 @@ export default class VoiceStateUpdate extends Event {
 		}
 	}
 
-	private async handleJoin(
-		newState: VoiceState,
-		client: Lavamusic,
-	): Promise<void> {
+	private async handleJoin(newState: VoiceState, client: Lavamusic): Promise<void> {
 		await this.delay(3000);
 		const bot = newState.guild.voiceStates.cache.get(client.user!.id);
 		if (!bot) return;
-		if (
-			bot.channelId &&
-			bot.channel?.type === ChannelType.GuildStageVoice &&
-			bot.suppress
-		) {
+		if (bot.channelId && bot.channel?.type === ChannelType.GuildStageVoice && bot.suppress) {
 			if (
 				bot.channel &&
 				bot.member &&
-				bot.channel
-					.permissionsFor(bot.member!)
-					.has(PermissionFlagsBits.MuteMembers)
+				bot.channel.permissionsFor(bot.member!).has(PermissionFlagsBits.MuteMembers)
 			) {
 				try {
 					await bot.setSuppressed(false);
@@ -164,15 +139,11 @@ export default class VoiceStateUpdate extends Event {
 
 		if (!player?.voiceChannelId) return;
 
-		const vc = await newState.guild.channels
-			.fetch(player.voiceChannelId)
-			.catch(() => null);
+		const vc = await newState.guild.channels.fetch(player.voiceChannelId).catch(() => null);
 		if (!vc || !("members" in vc)) return;
 
 		if (newState.id === client.user?.id && !newState.serverDeaf) {
-			const botMember = await newState.guild.members
-				.fetch(client.user!.id)
-				.catch(() => null);
+			const botMember = await newState.guild.members.fetch(client.user!.id).catch(() => null);
 			if (botMember) {
 				const permissions = vc.permissionsFor(botMember);
 				if (permissions?.has(PermissionFlagsBits.DeafenMembers)) {
@@ -186,24 +157,18 @@ export default class VoiceStateUpdate extends Event {
 		}
 	}
 
-	private async handleLeave(
-		newState: VoiceState,
-		client: Lavamusic,
-	): Promise<void> {
+	private async handleLeave(newState: VoiceState, client: Lavamusic): Promise<void> {
 		const player = client.manager.getPlayer(newState.guild.id);
 		if (!player) return;
 		if (!player?.voiceChannelId) return;
 
 		const is247 = await client.db.get_247(newState.guild.id);
-		const vc = await newState.guild.channels
-			.fetch(player.voiceChannelId)
-			.catch(() => null);
+		const vc = await newState.guild.channels.fetch(player.voiceChannelId).catch(() => null);
 		if (!vc || !("members" in vc)) return;
 
 		if (
 			vc.members instanceof Map &&
-			Array.from(vc.members.values()).filter((m: GuildMember) => !m.user.bot)
-				.length === 0
+			Array.from(vc.members.values()).filter((m: GuildMember) => !m.user.bot).length === 0
 		) {
 			setTimeout(async () => {
 				const latestPlayer = client.manager.getPlayer(newState.guild.id);
@@ -215,18 +180,13 @@ export default class VoiceStateUpdate extends Event {
 					ch &&
 					"members" in ch &&
 					ch.members instanceof Map &&
-					Array.from(ch.members.values()).filter(
-						(m: GuildMember) => !m.user.bot,
-					).length === 0
+					Array.from(ch.members.values()).filter((m: GuildMember) => !m.user.bot).length === 0
 				) {
 					if (!is247) {
 						try {
 							await latestPlayer.destroy();
 						} catch (err) {
-							logger?.error?.(
-								"destroy() after 5s no-listeners failed",
-								err,
-							);
+							logger?.error?.("destroy() after 5s no-listeners failed", err);
 						}
 					}
 				}
@@ -234,24 +194,15 @@ export default class VoiceStateUpdate extends Event {
 		}
 	}
 
-	private async handleMove(
-		newState: VoiceState,
-		client: Lavamusic,
-	): Promise<void> {
+	private async handleMove(newState: VoiceState, client: Lavamusic): Promise<void> {
 		await this.delay(3000);
 		const bot = newState.guild.voiceStates.cache.get(client.user!.id);
 		if (!bot) return;
-		if (
-			bot.channelId &&
-			bot.channel?.type === ChannelType.GuildStageVoice &&
-			bot.suppress
-		) {
+		if (bot.channelId && bot.channel?.type === ChannelType.GuildStageVoice && bot.suppress) {
 			if (
 				bot.channel &&
 				bot.member &&
-				bot.channel
-					.permissionsFor(bot.member!)
-					.has(PermissionFlagsBits.MuteMembers)
+				bot.channel.permissionsFor(bot.member!).has(PermissionFlagsBits.MuteMembers)
 			) {
 				try {
 					await bot.setSuppressed(false);

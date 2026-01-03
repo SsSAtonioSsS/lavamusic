@@ -1,9 +1,4 @@
-import {
-	EmbedBuilder,
-	type Guild,
-	type GuildMember,
-	type TextChannel,
-} from "discord.js";
+import { EmbedBuilder, type Guild, type GuildMember, type TextChannel } from "discord.js";
 import { Event, type Lavamusic } from "../../structures/index";
 import logger from "../../structures/Logger";
 
@@ -20,9 +15,7 @@ export default class GuildDelete extends Event {
 		try {
 			owner = await guild.members.fetch(guild.ownerId);
 		} catch (error) {
-			logger.error(
-				`Error fetching owner for guild ${guild.id}: ${error}`,
-			);
+			logger.error(`Error fetching owner for guild ${guild.id}: ${error}`);
 		}
 
 		const embed = new EmbedBuilder()
@@ -67,17 +60,13 @@ export default class GuildDelete extends Event {
 		try {
 			const fetched = await this.client.channels.fetch(logChannelId);
 			if (!fetched?.isTextBased()) {
-				logger.error(
-					`Channel ${logChannelId} is not a text-based channel.`,
-				);
+				logger.error(`Channel ${logChannelId} is not a text-based channel.`);
 				return;
 			}
 			const channel = fetched as TextChannel;
 			await channel.send({ embeds: [embed] });
 		} catch (error) {
-			logger.error(
-				`Error sending message to log channel ${logChannelId}: ${error}`,
-			);
+			logger.error(`Error sending message to log channel ${logChannelId}: ${error}`);
 		}
 	}
 }

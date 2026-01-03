@@ -5,7 +5,7 @@ import type * as schema from "./../database/schemas";
 
 export enum DatabaseType {
 	Postgres = "postgres",
-	PGLite = "pglite"
+	PGLite = "pglite",
 }
 
 export type LavaDatabase = PgliteDatabase<typeof schema> | NodePgDatabase<typeof schema>;

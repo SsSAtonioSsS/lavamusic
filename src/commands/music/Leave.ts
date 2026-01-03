@@ -1,3 +1,4 @@
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class Leave extends Command {
@@ -5,7 +6,7 @@ export default class Leave extends Command {
 		super(client, {
 			name: "leave",
 			description: {
-				content: "cmd.leave.description",
+				content: I18N.commands.leave.description,
 				examples: ["leave"],
 				usage: "leave",
 			},
@@ -22,12 +23,7 @@ export default class Leave extends Command {
 			},
 			permissions: {
 				dev: false,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: true,
@@ -46,7 +42,7 @@ export default class Leave extends Command {
 				embeds: [
 					embed
 						.setColor(this.client.color.main)
-						.setDescription(ctx.locale("cmd.leave.left", { channelId })),
+						.setDescription(ctx.locale(I18N.commands.leave.left, { channelId })),
 				],
 			});
 		}
@@ -54,7 +50,7 @@ export default class Leave extends Command {
 			embeds: [
 				embed
 					.setColor(this.client.color.red)
-					.setDescription(ctx.locale("cmd.leave.not_in_channel")),
+					.setDescription(ctx.locale(I18N.commands.leave.not_in_channel)),
 			],
 		});
 	}

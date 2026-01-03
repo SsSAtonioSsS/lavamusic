@@ -1,4 +1,5 @@
 import type { GuildMember } from "discord.js";
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 import logger from "../../structures/Logger";
 
@@ -7,7 +8,7 @@ export default class _247 extends Command {
 		super(client, {
 			name: "247",
 			description: {
-				content: "cmd.247.description",
+				content: I18N.commands[247].description,
 				examples: ["247"],
 				usage: "247",
 			},
@@ -24,12 +25,7 @@ export default class _247 extends Command {
 			},
 			permissions: {
 				dev: false,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: ["ManageGuild"],
 			},
 			slashCommand: true,
@@ -47,7 +43,7 @@ export default class _247 extends Command {
 				return await ctx.sendMessage({
 					embeds: [
 						embed
-							.setDescription(ctx.locale("cmd.247.errors.not_in_voice"))
+							.setDescription(ctx.locale(I18N.commands[247].errors.not_in_voice))
 							.setColor(client.color.red),
 					],
 				});
@@ -57,16 +53,12 @@ export default class _247 extends Command {
 				return await ctx.sendMessage({
 					embeds: [
 						embed
-							.setDescription(ctx.locale("cmd.247.messages.disabled"))
+							.setDescription(ctx.locale(I18N.commands[247].messages.disabled))
 							.setColor(client.color.red),
 					],
 				});
 			}
-			await client.db.set_247(
-				ctx.guild.id,
-				ctx.channel!.id,
-				member.voice.channel.id,
-			);
+			await client.db.set_247(ctx.guild.id, ctx.channel!.id, member.voice.channel.id);
 			if (!player) {
 				player = client.manager.createPlayer({
 					guildId: ctx.guild.id,
@@ -81,7 +73,7 @@ export default class _247 extends Command {
 			return await ctx.sendMessage({
 				embeds: [
 					embed
-						.setDescription(ctx.locale("cmd.247.messages.enabled"))
+						.setDescription(ctx.locale(I18N.commands[247].messages.enabled))
 						.setColor(this.client.color.main),
 				],
 			});
@@ -90,7 +82,7 @@ export default class _247 extends Command {
 			return await ctx.sendMessage({
 				embeds: [
 					embed
-						.setDescription(ctx.locale("cmd.247.errors.generic"))
+						.setDescription(ctx.locale(I18N.commands[247].errors.generic))
 						.setColor(client.color.red),
 				],
 			});

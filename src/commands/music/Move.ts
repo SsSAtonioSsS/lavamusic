@@ -1,3 +1,4 @@
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class Move extends Command {
@@ -5,7 +6,7 @@ export default class Move extends Command {
 		super(client, {
 			name: "move",
 			description: {
-				content: "cmd.move.description",
+				content: I18N.commands.move.description,
 				examples: ["move 2 to 1"],
 				usage: "move <from> to <to>",
 			},
@@ -22,25 +23,20 @@ export default class Move extends Command {
 			},
 			permissions: {
 				dev: false,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: true,
 			options: [
 				{
 					name: "from",
-					description: "cmd.move.options.from",
+					description: I18N.commands.move.options.from,
 					type: 4,
 					required: true,
 				},
 				{
 					name: "to",
-					description: "cmd.move.options.to",
+					description: I18N.commands.move.options.to,
 					type: 4,
 					required: true,
 				},
@@ -48,23 +44,16 @@ export default class Move extends Command {
 		});
 	}
 
-	public async run(
-		client: Lavamusic,
-		ctx: Context,
-		args: string[],
-	): Promise<any> {
+	public async run(client: Lavamusic, ctx: Context, args: string[]): Promise<any> {
 		const player = client.manager.getPlayer(ctx.guild.id);
 		const embed = this.client.embed();
-		if (!player)
-			return await ctx.sendMessage(
-				ctx.locale("event.message.no_music_playing"),
-			);
+		if (!player) return await ctx.sendMessage(ctx.locale(I18N.events.message.no_music_playing));
 		if (player.queue.tracks.length === 0) {
 			return await ctx.sendMessage({
 				embeds: [
 					embed
 						.setColor(this.client.color.red)
-						.setDescription(ctx.locale("cmd.move.errors.no_tracks")),
+						.setDescription(ctx.locale(I18N.commands.move.errors.no_tracks)),
 				],
 			});
 		}
@@ -85,7 +74,7 @@ export default class Move extends Command {
 				embeds: [
 					embed
 						.setColor(this.client.color.red)
-						.setDescription(ctx.locale("cmd.move.errors.invalid_usage")),
+						.setDescription(ctx.locale(I18N.commands.move.errors.invalid_usage)),
 				],
 			});
 		}
@@ -95,7 +84,7 @@ export default class Move extends Command {
 				embeds: [
 					embed
 						.setColor(this.client.color.red)
-						.setDescription(ctx.locale("cmd.move.errors.invalid_numbers")),
+						.setDescription(ctx.locale(I18N.commands.move.errors.invalid_numbers)),
 				],
 			});
 		}
@@ -115,7 +104,7 @@ export default class Move extends Command {
 				embeds: [
 					embed
 						.setColor(this.client.color.red)
-						.setDescription(ctx.locale("cmd.move.errors.invalid_positions")),
+						.setDescription(ctx.locale(I18N.commands.move.errors.invalid_positions)),
 				],
 			});
 		}
@@ -125,7 +114,7 @@ export default class Move extends Command {
 				embeds: [
 					embed
 						.setColor(this.client.color.main)
-						.setDescription(ctx.locale("cmd.move.messages.same_position")),
+						.setDescription(ctx.locale(I18N.commands.move.errors.same_position)),
 				],
 			});
 		}
@@ -137,7 +126,7 @@ export default class Move extends Command {
 		return await ctx.sendMessage({
 			embeds: [
 				embed.setColor(this.client.color.main).setDescription(
-					ctx.locale("cmd.move.messages.moved", {
+					ctx.locale(I18N.commands.move.messages.moved, {
 						from: from,
 						to: to,
 						title: track.info.title,

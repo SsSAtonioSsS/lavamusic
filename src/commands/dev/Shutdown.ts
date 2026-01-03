@@ -1,4 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { I18N } from "../../structures/I18n";
 import { Command, type Context, type Lavamusic } from "../../structures/index";
 
 export default class Shutdown extends Command {
@@ -6,7 +7,7 @@ export default class Shutdown extends Command {
 		super(client, {
 			name: "shutdown",
 			description: {
-				content: "Shutdown the bot",
+				content: I18N.dev.shutdown.description,
 				examples: ["shutdown"],
 				usage: "shutdown",
 			},
@@ -22,12 +23,7 @@ export default class Shutdown extends Command {
 			},
 			permissions: {
 				dev: true,
-				client: [
-					"SendMessages",
-					"ReadMessageHistory",
-					"ViewChannel",
-					"EmbedLinks",
-				],
+				client: ["SendMessages", "ReadMessageHistory", "ViewChannel", "EmbedLinks"],
 				user: [],
 			},
 			slashCommand: false,
@@ -39,14 +35,12 @@ export default class Shutdown extends Command {
 		const embed = this.client.embed();
 		const button = new ButtonBuilder()
 			.setStyle(ButtonStyle.Danger)
-			.setLabel("Confirm Shutdown")
+			.setLabel(I18N.dev.shutdown.prompt)
 			.setCustomId("confirm-shutdown");
 		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 		const shutdownEmbed = embed
 			.setColor(this.client.color.red)
-			.setDescription(
-				`**Are you sure you want to shutdown the bot **\`${client.user?.username}\`?`,
-			)
+			.setDescription(`**Are you sure you want to shutdown the bot **\`${client.user?.username}\`?`)
 			.setTimestamp();
 
 		const msg = await ctx.sendMessage({
@@ -54,8 +48,7 @@ export default class Shutdown extends Command {
 			components: [row],
 		});
 
-		const filter = (i: any) =>
-			i.customId === "confirm-shutdown" && i.user.id === ctx.author?.id;
+		const filter = (i: any) => i.customId === "confirm-shutdown" && i.user.id === ctx.author?.id;
 		const collector = msg.createMessageComponentCollector({
 			time: 30000,
 			filter,
@@ -65,7 +58,7 @@ export default class Shutdown extends Command {
 			await i.deferUpdate();
 
 			await msg.edit({
-				content: "Shutting down the bot...",
+				content: I18N.dev.shutdown.status,
 				embeds: [],
 				components: [],
 			});
@@ -77,7 +70,7 @@ export default class Shutdown extends Command {
 		collector.on("end", async () => {
 			if (collector.collected.size === 0) {
 				await msg.edit({
-					content: "Shutdown cancelled.",
+					content: I18N.dev.shutdown.canceled,
 					components: [],
 				});
 			}

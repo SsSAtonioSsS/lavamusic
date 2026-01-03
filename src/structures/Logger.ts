@@ -30,7 +30,9 @@ class Logger extends Signale {
 			const key = level.toLowerCase();
 
 			types[key] = {
-				...(!config.logBadgeStyle.match(LogBadgeStyle.default) && { badge: getLogBadge(level, config.logBadgeStyle) }),
+				...(!config.logBadgeStyle.match(LogBadgeStyle.default) && {
+					badge: getLogBadge(level, config.logBadgeStyle),
+				}),
 				color: CONSOLE_LOG_COLORS[level],
 				label: level,
 			};
