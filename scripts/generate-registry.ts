@@ -12,10 +12,6 @@ const REGISTRY_CONFIG = {
 		path: join(SRC_DIR, "events"),
 		exportName: "EventList",
 	},
-	plugins: {
-		path: join(SRC_DIR, "plugin", "plugins"),
-		exportName: "PluginList",
-	},
 } as const;
 
 type RegistryType = keyof typeof REGISTRY_CONFIG;

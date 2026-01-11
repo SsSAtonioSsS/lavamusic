@@ -25,6 +25,8 @@ export default class Ready extends Event {
 			status: env.BOT_STATUS as any,
 		});
 
+		this.client.utils.updateStatus(this.client);
+
 		if (env.TOPGG) {
 			const autoPoster = AutoPoster(env.TOPGG, this.client);
 			setInterval(() => {

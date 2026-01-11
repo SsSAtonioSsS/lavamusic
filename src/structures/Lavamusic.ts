@@ -18,7 +18,6 @@ import config from "../config";
 import ServerData from "../database/server";
 import { env } from "../env";
 import { EventList } from "../events";
-import loadPlugins from "../plugin/index";
 import { LavamusicEventType } from "../types/events";
 import * as Utils from "../utils/Utils";
 import { initI18n, resolveLocalizations, t } from "./I18n";
@@ -74,8 +73,6 @@ export default class Lavamusic extends Client {
 
 			this.loadEvents();
 			logger.info(`Successfully loaded events!`);
-
-			loadPlugins(this);
 
 			await this.login(token);
 		} catch (error) {

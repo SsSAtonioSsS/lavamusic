@@ -1,4 +1,3 @@
-import path from "node:path";
 import { ShardEvents, ShardingManager } from "discord.js";
 import { env } from "./env";
 import logger from "./structures/Logger";

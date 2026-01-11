@@ -33,10 +33,12 @@ export default class InteractionCreate extends Event {
 			interaction.type === InteractionType.ApplicationCommand &&
 			interaction.isChatInputCommand()
 		) {
-			const setup = await this.client.db.getSetup(interaction.guildId);
+			const [setup, locale] = await Promise.all([
+				this.client.db.getSetup(interaction.guildId),
+				this.client.db.getLanguage(interaction.guildId),
+			]);
 			const allowedCategories = ["filters", "music", "playlist"];
 			const commandInSetup = this.client.commands.get(interaction.commandName);
-			const locale = await this.client.db.getLanguage(interaction.guildId);
 
 			if (
 				setup &&
@@ -163,7 +165,7 @@ export default class InteractionCreate extends Event {
 
 					if (
 						(interaction.member as GuildMember).voice.channel?.type ===
-							ChannelType.GuildStageVoice &&
+						ChannelType.GuildStageVoice &&
 						!clientMember.permissions.has(PermissionFlagsBits.RequestToSpeak)
 					) {
 						return await interaction.reply({

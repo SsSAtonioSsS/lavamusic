@@ -1,6 +1,7 @@
 import { type ClientOptions, GatewayIntentBits, Options, Sweepers } from "discord.js";
 import { env } from "./env";
 import Lavamusic from "./structures/Lavamusic";
+import { setupAntiCrash } from "./utils/ProcessHandlers";
 
 const { MessageContent, GuildVoiceStates, GuildMessages, Guilds } =
 	GatewayIntentBits;
@@ -45,6 +46,7 @@ export async function launch() {
 	};
 
 	const client = new Lavamusic(clientOptions);
+	setupAntiCrash(client);
 	await client.start(env.TOKEN);
 }
 
