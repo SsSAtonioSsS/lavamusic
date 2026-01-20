@@ -1,4 +1,4 @@
-# 🔥 Lavamusic — Ultimate Discord Music Bot
+## 🔥 Lavamusic - Ultimate Discord Music Bot
 
 <div align="center">
 
@@ -19,7 +19,7 @@
 ## 🎧 About Lavamusic
 
 **Lavamusic** is a powerful, modern Discord music bot built for performance, stability, and flexibility.  
-Designed by the **BotxLab** team, it delivers smooth audio playback, advanced filters, playlist systems, and full server customization — perfect for communities of any size.
+Designed by the **[BotxLab](https://github.com/botxlab)** team, it delivers smooth audio playback, advanced filters, playlist systems, and full server customization — perfect for communities of any size.
 
 Whether you're running a gaming server, study group, or chill community, Lavamusic brings nonstop vibes to your voice channels.
 
@@ -76,25 +76,12 @@ One-command deployment with Docker support.
 
 ## 📘 Documentation
 
-Full documentation is available here:
-
-- 🚀 **Installation Guide**  
-  https://botxlab.github.io/lavamusic/installation.html
-
-- 🐳 **Docker Setup**  
-  https://botxlab.github.io/lavamusic/docker.html
-
-- 🔧 **Configuration Guide**  
-  https://botxlab.github.io/lavamusic/configuration.html
-
-- 🌍 **Translations & Languages**  
-  https://botxlab.github.io/lavamusic/translation.html
-
-- 🎵 **Commands List**  
-  https://botxlab.github.io/lavamusic/commands.html
-
-- ❓ **FAQ**  
-  https://botxlab.github.io/lavamusic/faq.html
+- 🚀 **[Installation Guide](https://botxlab.github.io/lavamusic/installation.html)**  
+- 🐳 **[Docker Setup](https://botxlab.github.io/lavamusic/docker.html)**  
+- 🔧 **[Configuration Guide](https://botxlab.github.io/lavamusic/configuration.html)**  
+- 🌍 **[Translations & Languages](https://botxlab.github.io/lavamusic/translation.html)**  
+- 🎵 **[Commands List](https://botxlab.github.io/lavamusic/commands.html)**  
+- ❓ **[FAQ](https://botxlab.github.io/lavamusic/faq.html)**  
 
 ---
 
@@ -102,12 +89,10 @@ Full documentation is available here:
 
 We welcome contributions from everyone ❤️  
 
-If you'd like to help improve Lavamusic:
-
-- Read **[CONTRIBUTING.md](CONTRIBUTING.md)**
-- Submit pull requests
-- Report bugs
-- Suggest features
+- Read **[CONTRIBUTING.md](CONTRIBUTING.md)**  
+- Submit pull requests  
+- Report bugs  
+- Suggest features  
 
 Every contribution matters.
 
@@ -115,19 +100,10 @@ Every contribution matters.
 
 ## 🆘 Support & Community
 
-Need help or want to connect?
-
-- 🔗 **Invite the bot**  
-  https://mintone.tech/invite
-
-- 🐛 **Report issues**  
-  https://github.com/botxlab/lavamusic/issues
-
-- 💬 **Join our Discord**  
-  https://discord.gg/UsXz2x34d4
-
-- ⚡ **Common Quick Fixes**  
-  https://github.com/botxlab/lavamusic/blob/master/CONTRIBUTING.md#-common-quick-fixes
+- 🔗 **[Invite the Bot](https://mintone.tech/invite)**  
+- 🐛 **[Report Issues](https://github.com/botxlab/lavamusic/issues)**  
+- 💬 **[Join Our Discord](https://discord.gg/UsXz2x34d4)**  
+- ⚡ **[Common Quick Fixes](https://github.com/botxlab/lavamusic/blob/master/CONTRIBUTING.md#-common-quick-fixes)**  
 
 ---
 
