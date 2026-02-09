@@ -58,12 +58,17 @@ export function formatTime(ms: number): string {
 export async function setVoiceStatus(
 	client: Lavamusic,
 	channelId: string,
-	message: string,
+	message: string | null,
 ): Promise<void> {
-	if (!channelId || !message) return;
+	if (!channelId) return;
+
+	// string => set | null / "" => clear
+	const status = message && message.trim().length > 0 ? message : null;
 
 	try {
-		await client.rest.put(`/channels/${channelId}/voice-status`, { body: { status: message } });
+		await client.rest.put(`/channels/${channelId}/voice-status`, {
+			body: { status },
+		});
 	} catch (error) {
 		logger.error(`[Voice Status] Failed for channel ${channelId}: ${error}`);
 	}
