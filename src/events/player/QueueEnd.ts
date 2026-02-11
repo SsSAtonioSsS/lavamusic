@@ -3,6 +3,7 @@ import type { Player, Track, TrackStartEvent } from "lavalink-client";
 import { Event, type Lavamusic } from "../../structures/index";
 import { LavamusicEventType } from "../../types/events";
 import { updateSetup } from "../../utils/SetupSystem";
+import { env } from "../../env";
 
 export default class QueueEnd extends Event {
 	constructor(client: Lavamusic, file: string) {
@@ -23,21 +24,33 @@ export default class QueueEnd extends Event {
 		}
 
 		const messageId = player.get<string | undefined>("messageId");
-		if (!messageId) return;
-
-		const channel = guild.channels.cache.get(player.textChannelId!) as TextChannel;
-		if (!channel) return;
-
-		const message = await channel.messages.fetch(messageId).catch(() => {
-			null;
-		});
-		if (!message) return;
-
-		if (message.editable) {
-			await message.edit({ components: [] }).catch(() => {
-				null;
-			});
+		if (messageId) {
+			const channel = guild.channels.cache.get(player.textChannelId!) as TextChannel;
+			if (channel) {
+				const message = await channel.messages.fetch(messageId).catch(() => {
+					null;
+				});
+				if (message && message.editable) {
+					await message.edit({ components: [] }).catch(() => {
+						null;
+					});
+				}
+			}
 		}
+		
+		const idleTime = env.IDLE_IN_CHANNEL;
+		if (idleTime === -1) return;
+		if (idleTime === 0) {
+			await player.destroy();
+			return;
+		}
+
+		const timeout = setTimeout(async () => {
+			if (player && !player.playing) {
+				await player.destroy();
+			}
+		}, idleTime * 1000);
+		player.set("leaveTimeout", timeout);
 	}
 }
 

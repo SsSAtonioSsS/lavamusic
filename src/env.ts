@@ -75,6 +75,12 @@ const envSchema = z.object({
 		z.array(LavalinkNodeSchema),
 	),
 	GENIUS_API: z.string().optional(),
+	IDLE_IN_CHANNEL: z.preprocess((val) => {
+		if (typeof val === "string") {
+			return Number.parseInt(val, 10);
+		}
+		return val;
+	}, z.number().default(-1)),
 });
 
 type Env = z.infer<typeof envSchema>;

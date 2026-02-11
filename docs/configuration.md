@@ -25,6 +25,10 @@ Your bot's behavior is defined by these key variables. Create this file by copyi
 * **`DATABASE_URL`**: The connection string for your database. Supports SQLite, PostgreSQL, and PGLite.
   * *See the Database section below for more details.*
 
+### Misc
+
+* **`IDLE_IN_CHANNEL`**: The time the bot stays in the channel in seconds.
+  * -1 is infinite.
 ---
 
 ## 🧠 Smart Database Detection

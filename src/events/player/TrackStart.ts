@@ -18,6 +18,7 @@ import { Event, type Lavamusic } from "../../structures/index";
 import type { Requester } from "../../types";
 import { LavamusicEventType } from "../../types/events";
 import { trackStart } from "../../utils/SetupSystem";
+import { env } from "../../env";
 
 export default class TrackStart extends Event {
 	constructor(client: Lavamusic, file: string) {
@@ -28,6 +29,15 @@ export default class TrackStart extends Event {
 	}
 
 	public async run(player: Player, track: Track | null, _payload: TrackStartEvent): Promise<void> {
+		
+		if (env.IDLE_IN_CHANNEL > 0) {
+			const leaveTimeout = player.get<NodeJS.Timeout>("leaveTimeout");
+			if (leaveTimeout) {
+				clearTimeout(leaveTimeout);
+				player.set("leaveTimeout", null);
+			}
+		}
+
 		const guild = this.client.guilds.cache.get(player.guildId);
 		if (!guild) return;
 		if (!player.textChannelId) return;
