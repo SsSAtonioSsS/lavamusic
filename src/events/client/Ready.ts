@@ -4,6 +4,7 @@ import { env } from "../../env";
 import { Event, type Lavamusic } from "../../structures/index";
 import logger from "../../structures/Logger";
 import { LavamusicEventType } from "../../types/events";
+import { transliterate as tr } from 'transliteration';
 export default class Ready extends Event {
 	constructor(client: Lavamusic, file: string) {
 		super(client, file, {
@@ -35,7 +36,7 @@ export default class Ready extends Event {
 		} else {
 			logger.warn("Top.gg token not found. Skipping auto poster.");
 		}
-		await this.client.manager.init({ ...this.client.user!, shards: "auto" });
+		await this.client.manager.init({ ...this.client.user!, username: tr(this.client.user?.username??"Bot"), shards: "auto" });
 	}
 }
 
